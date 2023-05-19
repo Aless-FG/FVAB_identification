@@ -93,7 +93,7 @@ new_shape = (data_array.shape[0] * data_array.shape[1] * data_array.shape[2], da
 data_reshape = data_array.reshape(new_shape)
 
 # crea un array numpy di valori interi da 1 a 21
-labels_train = np.repeat(np.arange(0, 21), 42)
+labels_train = np.repeat(np.arange(0, 21), 42) # 3 * 14 = 42 (sessioni per sensori)
 # Suddivisione dati in training set e test set
 X_train, X_test, y_train, y_test = train_test_split(data_reshape, labels_train, test_size=0.3, random_state=42,
                                                     shuffle=True)
