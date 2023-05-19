@@ -56,7 +56,7 @@ reconstructed_model = tf.keras.saving.load_model("/home/ale/Desktop/model")
 data_array = np.zeros((n_subjects, n_sessions, n_sensors, 129, 600)) # array multidimensionale
 
 for j in range(1, 4):  # da 1 a 3 (numero sessioni)
-    s_mat = loadmat(f"/home/ale/Desktop/BED_Biometric_EEG_dataset/BED/RAW_PARSED/s1_s{j}.mat")  # leggo i .mat
+    s_mat = loadmat(f"/home/ale/Desktop/BED_Biometric_EEG_dataset/BED/RAW_PARSED/s6_s{j}.mat")  # leggo i .mat
     rec = s_mat['recording']  # accedo alla colonna recording
     rec_dataframe = pd.DataFrame(rec,
                                  columns=['COUNTER', 'INTERPOLATED', 'F3', 'FC5', 'AF3', 'F7', 'T7', 'P7', 'O1',
@@ -88,4 +88,15 @@ data_reshape = data_array.reshape(new_shape)
 prediction = reconstructed_model.predict(data_reshape)
 
 print("prediction shape:", prediction.shape)
+print(prediction)
+#predicted_labels = np.argmax(prediction, axis=1)
+#print(predicted_labels)
+subject = 0
 
+for column in prediction.T:
+    sumCol = 0
+    avg = 0
+    sumCol += sum(column)
+    avg += sumCol / len(column)
+    print("Soggetto:", subject, " ", str(avg))
+    subject += 1
