@@ -49,6 +49,7 @@ def resize_signals(signals, lenght):
     return np.array(resized_signals)
 
 
+
 n_subjects = 21  # numero soggetti
 n_sessions = 3  # numero sessioni
 n_sensors = 14  # numero sensori
@@ -91,7 +92,7 @@ for i in range(1, 22):  # da 1 a 21 (numero soggetti)
 new_shape = (data_array.shape[0] * data_array.shape[1] * data_array.shape[2], data_array.shape[3], data_array.shape[4])
 data_reshape = data_array.reshape(new_shape)
 
-# crea un array di valori interi da 1 a 21
+# crea un array numpy di valori interi da 1 a 21
 labels_train = np.repeat(np.arange(0, 21), 42)
 # Suddivisione dati in training set e test set
 X_train, X_test, y_train, y_test = train_test_split(data_reshape, labels_train, test_size=0.3, random_state=42,
@@ -109,3 +110,5 @@ early_stop = EarlyStopping(monitor='val_loss', patience=10, verbose=1, mode='min
 print(model.summary())
 history = model.fit(X_train, y_train_cat, epochs=100, validation_split=0.2, batch_size=32, callbacks=early_stop)
 print(model.evaluate(X_test, y_test_cat))
+
+model.save("/home/ale/Desktop/")
