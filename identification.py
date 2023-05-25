@@ -4,7 +4,7 @@ import pandas as pd
 from scipy.io import loadmat
 import pywt
 from keras.models import Sequential
-from keras.layers import LSTM, Dense
+from keras.layers import LSTM, Dense, GRU
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import normalize
 from keras.callbacks import EarlyStopping
@@ -102,7 +102,7 @@ y_test_cat = to_categorical(y_test, num_classes=21)
 
 # modello LSTM
 model = Sequential()
-model.add(LSTM(32, input_shape=(129, 600), dropout=0.2))
+model.add(GRU(64, input_shape=(129, 600), dropout=0.2))
 model.add(Dense(16, activation='relu'))
 model.add(Dense(21, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
@@ -111,4 +111,4 @@ print(model.summary())
 history = model.fit(X_train, y_train_cat, epochs=100, validation_split=0.2, batch_size=32, callbacks=early_stop)
 print(model.evaluate(X_test, y_test_cat))
 
-model.save("/home/ale/Desktop/")
+#model.save("/home/ale/Desktop/")

@@ -59,8 +59,8 @@ N = 101
 reconstructed_model = tf.keras.saving.load_model("/home/ale/Desktop/model")
 data_array = np.zeros((n_subjects, 1, 14, 129, 600))  # array multidimensionale
 
-# da 1 a 3 (numero sessioni)
-s_mat = loadmat(f"/home/ale/Desktop/BED_Biometric_EEG_dataset/BED/RAW_PARSED/s6_s3.mat")  # leggo i .mat
+
+s_mat = loadmat(f"/home/ale/Desktop/BED_Biometric_EEG_dataset/BED/RAW_PARSED/s21_s3.mat")  # leggo il .mat
 rec = s_mat['recording']  # accedo alla colonna recording
 rec_dataframe = pd.DataFrame(rec,
                              columns=['COUNTER', 'INTERPOLATED', 'F3', 'FC5', 'AF3', 'F7', 'T7', 'P7', 'O1',
