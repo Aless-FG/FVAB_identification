@@ -1,3 +1,4 @@
+from keras.metrics.confusion_metrics import Precision, Recall
 from scipy import signal
 import numpy as np
 import pandas as pd
@@ -9,44 +10,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import normalize
 from keras.callbacks import EarlyStopping
 from keras.utils import to_categorical
-import matplotlib.pyplot as plt
+import tensorflow as tf
 
 
-def resize_signals(signals, lenght):
-    window_size = 20
-    resized_signals = []
-    for sig in signals:
-        n_segments = int(len(sig) / window_size) + 1
-        segments = []
-        for seg in range(0, n_segments):
-            if seg * window_size + window_size >= len(sig):
-                start_idx = seg * window_size
-                sig_seg = sig[start_idx:]
-                pad = (seg + 1) * window_size - len(sig)
-                sig_seg = np.pad(sig_seg, (0, pad), mode='constant', constant_values=0)
-                segments.append(sig_seg)
-            else:
-                start_idx = seg * window_size
-                end_idx = (seg + 1) * window_size
-                sig_seg = sig[start_idx:end_idx]
-                segments.append(sig_seg)
-        energy = np.sum(np.array(segments) ** 2, axis=1)
-        while True:
-            min_energy_idx = np.argmin(energy)
-            energy = np.delete(energy, min_energy_idx)
-            start_idx = min_energy_idx * window_size
-            if len(sig) == lenght:
-                resized_signals.append(sig)
-                break
-            elif (len(sig) - window_size) < lenght:
-                end_idx = start_idx + (len(sig) - lenght)
-                sig = np.delete(sig, np.s_[start_idx:end_idx])
-                resized_signals.append(sig)
-                break
-            else:
-                end_idx = (min_energy_idx + 1) * window_size
-                sig = np.delete(sig, np.s_[start_idx:end_idx])
-    return np.array(resized_signals)
 
 
 
@@ -58,7 +24,7 @@ fc_hp = 0.5  # Frequenza di taglio inferiore
 fc_lp = 45  # Frequenza di taglio superiore
 N = 101
 
-data_array = np.zeros((n_subjects, n_sessions, n_sensors, 129, 600)) # array multidimensionale
+data_array = np.zeros((n_subjects, n_sessions, n_sensors, 129, 1606)) # array multidimensionale
 
 for i in range(1, 22):  # da 1 a 21 (numero soggetti)
     for j in range(1, 4):  # da 1 a 3 (numero sessioni)
@@ -83,9 +49,10 @@ for i in range(1, 22):  # da 1 a 21 (numero soggetti)
 
             # Esempio di calcolo della TD-PSD su una sub-banda di frequenza utilizzando la finestra di blackman
             f, t_psd, psd = signal.spectrogram(coeffs[0], fs, window='blackman', nperseg=fs, noverlap=int(fs / 4))
-            psd = resize_signals(psd, 300)
+            psd = tf.keras.utils.pad_sequences(psd, maxlen=803, dtype="float32", padding="pre") # padding del segnale
             psd_norm = normalize(psd, 'l2')  # normalizzazione L2 del segnale
             mirrored = np.concatenate((psd_norm, psd_norm[::-1]), axis=1)
+
             data_array[i - 1, j - 1, z, :, :] = mirrored
             z = z + 1
 
@@ -102,13 +69,13 @@ y_test_cat = to_categorical(y_test, num_classes=21)
 
 # modello LSTM
 model = Sequential()
-model.add(GRU(64, input_shape=(129, 600), dropout=0.2))
+model.add(GRU(64, input_shape=(129, 1606), dropout=0.2))
 model.add(Dense(16, activation='relu'))
 model.add(Dense(21, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-early_stop = EarlyStopping(monitor='val_loss', patience=10, verbose=1, mode='min')
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy', Precision(), Recall()])
 print(model.summary())
-history = model.fit(X_train, y_train_cat, epochs=100, validation_split=0.2, batch_size=32, callbacks=early_stop)
+history = model.fit(X_train, y_train_cat, epochs=15, validation_split=0.2, batch_size=32)
 print(model.evaluate(X_test, y_test_cat))
+model.get_metrics_result()
 
-#model.save("/home/ale/Desktop/")
+#model.save("/home/ale/Desktop/model")
