@@ -1,7 +1,7 @@
 # FVAB_identification_verification
 Subject identification and verification using EEG signals (Python3.8)
 
-# Pre-requsiti
+# Pre-requisiti
 1) un PC decente altrimenti il preprocessing sarà molto lungo
 2) Python 3.8
 3) dataset BED
