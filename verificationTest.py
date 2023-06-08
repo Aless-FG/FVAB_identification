@@ -9,11 +9,11 @@ from sklearn.metrics import roc_curve, auc
 
 
 def calculate_roc_auc_eer(subject, n_subjects, prediction): # funzione che calcola AUC e EER
-    gt = np.zeros(n_subjects)
-    for x in range(0, n_subjects):
+    gt = np.zeros(n_subjects) # array di 0 lungo 21
+    for x in range(0, n_subjects): # creazione ground-truth
         if x != subject:
             gt[x] = 0
-        else:
+        else: # se il soggetto è quello passato alla funzione setto 1
             gt[x] = 1
     x = 0
     pred = np.zeros(n_subjects)
@@ -21,13 +21,13 @@ def calculate_roc_auc_eer(subject, n_subjects, prediction): # funzione che calco
         sumCol = 0
         avg = 0
         sumCol += sum(column)
-        avg += sumCol / len(column)
-        pred[x] = avg
+        avg += sumCol / len(column) # media dei punteggi per soggetto
+        pred[x] = avg # inserisco la media nell'array
         x = x + 1
-    fpr, tpr, thresholds = roc_curve(gt, pred)
-    auc_roc = auc(fpr, tpr)
-    eer_roc = fpr[np.nanargmin(np.abs(tpr - (1 - fpr)))]
-    return auc_roc, eer_roc
+    fpr, tpr, thresholds = roc_curve(gt, pred) # calcolo rateo falsi positivi e veri positivi
+    auc_roc = auc(fpr, tpr) # calcolo auc
+    eer_roc = fpr[np.nanargmin(np.abs(tpr - (1 - fpr)))] # calcolo eer
+    return auc_roc, eer_roc # ritorno valori auc e eer
 
 
 def preprocessing(n_subjects, n_sessions, n_stimuli, n_coeffwt, n_sample_psd):
@@ -72,22 +72,22 @@ def preprocessing(n_subjects, n_sessions, n_stimuli, n_coeffwt, n_sample_psd):
                 test_array[0, 0, z, y, :] = mirrored
                 y = y + 1
             z = z + 1
+        # reshaping array
         n_sample = test_array.shape[1] * test_array.shape[2]
         new_shape = (test_array.shape[0] * n_sample, test_array.shape[3], test_array.shape[4])
         test_array = test_array.reshape(new_shape)
-        labels_test = np.repeat(i, n_sample)
-        y_test_cat = to_categorical(labels_test, num_classes=n_subjects)
-        model = tf.keras.models.load_model(f'Model1/')
-        y_scores = model.predict(test_array)
-        roc_auc, eer = calculate_roc_auc_eer(i, n_subjects, y_scores)
-        print(f"AUC for Subject {i + 1}:", roc_auc)
-        print(f"EER for Subject {i + 1}:", eer)
+
+        model = tf.keras.models.load_model(f'Model1/') # loading del modello da disco
+        y_scores = model.predict(test_array) # predizione
+        roc_auc, eer = calculate_roc_auc_eer(i, n_subjects, y_scores) # funzione che calcola auc e eer
+        print(f"AUC for Subject {i + 1}:", roc_auc) # stampa auc per soggetto
+        print(f"EER for Subject {i + 1}:", eer) # stampa eer per soggetto
 
 
 if __name__ == "__main__":
-    n_sub = 21
-    n_ses = 1
-    n_stim = 66
-    n_coefwt = 5
-    len_psd = 258
-    preprocessing(n_sub, n_ses, n_stim, n_coefwt, len_psd)
+    n_sub = 21 # numero soggetti
+    n_ses = 1 # sessione per la verifica
+    n_stim = 66 # numero stimoli
+    n_coefwt = 5 # numero coeff della wavelet
+    len_psd = 258 # lunghezza psd
+    preprocessing(n_sub, n_ses, n_stim, n_coefwt, len_psd) # richiamo funzione per preprocessing e testing

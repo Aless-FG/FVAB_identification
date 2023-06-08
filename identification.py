@@ -23,7 +23,7 @@ fs = 256  # frequenza di campionamento
 fc_hp = 0.5  # Frequenza di taglio inferiore
 fc_lp = 45  # Frequenza di taglio superiore
 N = 101
-
+max = 0
 data_array = np.zeros((n_subjects, n_sessions, n_sensors, 129, 1606)) # array multidimensionale
 
 for i in range(1, 22):  # da 1 a 21 (numero soggetti)
@@ -49,10 +49,10 @@ for i in range(1, 22):  # da 1 a 21 (numero soggetti)
 
             # Esempio di calcolo della TD-PSD su una sub-banda di frequenza utilizzando la finestra di blackman
             f, t_psd, psd = signal.spectrogram(coeffs[0], fs, window='blackman', nperseg=fs, noverlap=int(fs / 4))
+
             psd = tf.keras.utils.pad_sequences(psd, maxlen=803, dtype="float32", padding="pre") # padding del segnale
             psd_norm = normalize(psd, 'l2')  # normalizzazione L2 del segnale
             mirrored = np.concatenate((psd_norm, psd_norm[::-1]), axis=1)
-
             data_array[i - 1, j - 1, z, :, :] = mirrored
             z = z + 1
 
@@ -69,7 +69,8 @@ y_test_cat = to_categorical(y_test, num_classes=21)
 
 # modello LSTM
 model = Sequential()
-model.add(GRU(64, input_shape=(129, 1606), dropout=0.2))
+model.add(GRU(64, input_shape=(129, 1606),return_sequences=True,  dropout=0.2))
+model.add(GRU(32, dropout=0.2))
 model.add(Dense(16, activation='relu'))
 model.add(Dense(21, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy', Precision(), Recall()])
