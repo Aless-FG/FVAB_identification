@@ -27,7 +27,7 @@ fc_lp = 80  # Frequenza di taglio superiore
 N = 101 # paramtro che stabilisce il tipo di filtro (tipo I o tipo II)
 order = 4  # Ordine del filtro
 data_array = np.zeros((21, n_sessions,66, 5, 258)) # array multidimensionale
-for i in range(1,21):
+for i in range(1,22):
     for j in range(1,4):
         s_mat = loadmat(f"/home/ale/Desktop/BED_Biometric_EEG_dataset/BED/RAW_PARSED/s{i}_s{j}.mat") # lettura file dataset
         rec = s_mat['recording']
