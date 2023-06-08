@@ -5,7 +5,7 @@ Subject identification and verification using EEG signals (Python3.8)
 1) un PC decente altrimenti il preprocessing sarà molto lungo
 2) Python 3.8
 3) dataset BED
-4) IDE a vostra sceltahttps://github.com/Aless-FG/FVAB_identification/tree/master#librerie
+4) IDE a vostra scelta
 5) installazione librerie necessarie (vedasi sezione [Librerie](https://github.com/Aless-FG/FVAB_identification/tree/master#librerie))
 
 # Identificazione
