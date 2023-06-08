@@ -6,7 +6,7 @@ Subject identification and verification using EEG signals (Python3.8)
 2) Python 3.8
 3) dataset BED
 4) IDE a vostra scelta
-5) installazione librerie necessarie
+5) installazione librerie necessarie (vedasi sezione Librerie)
 
 # Librerie
 `keras==2.12.`
@@ -35,18 +35,4 @@ Subject identification and verification using EEG signals (Python3.8)
 3) runnare verificationTest
 4) fatto
 
-# Librerie
-`keras==2.12.`
-
-`numpy==1.24.3`
-
-`pandas==2.0.2`
-
-`scikit_learn==1.2.2`
-
-`scipy==1.10.1`
-
-`tensorflow==2.12.0`
-
-`PyWavelets==1.4.1`
 
