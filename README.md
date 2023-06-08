@@ -2,10 +2,15 @@
 Subject identification and verification using EEG signals (Python3.8)
 
 
-# Primi passi
-1) accendere PC
-2) aprire l'IDE che si preferisce
+# Identificazione
+1) cambiare path dataset
+2) runnare identification_test
+3) fatto
 
+# Verifica
+1) cambiare path dataset
+2) runnare verificationTraining
+3) runnare verificationTest
 # Librerie
 keras==2.12.0
 
