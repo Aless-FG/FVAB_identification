@@ -19,6 +19,22 @@ Subject identification and verification using EEG signals (Python3.8)
 3) runnare verificationTest
 4) fatto
 
+# Verifica dei soggetti in base allo stimolo
+
+I 66 stimoli a cui sono sottoposti sono così distribuiti nel dataset:
+0-24 Stimoli Visivi
+24-48 Stimoli Cognitivi
+48-52 VEP
+52-56 VEPC
+56-64 Riposo
+64 Occhi chiusi
+65 Occhi aperti
+
+Per ottenere quindi i risultati relativi all'AUC e all'EER è necessario:
+1) Modificare nel main la variabile n_stim con il numero di stimoli (es. 24 nel caso di stimoli visivi o 8 nel caso di Riposo)
+2) Nel terzo ciclo della funzione preprocessing inserire il range per il singolo stimolo come rappresentato sopra (es. nel caso di stimoli visivi range(0,24))
+ 
+Queste operazioni vanno effettuate sia per VerificationTraining.py che per VerificationTest.py. 
 
 # Librerie
 `keras==2.12.`
