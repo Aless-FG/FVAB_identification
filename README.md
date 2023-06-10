@@ -22,12 +22,19 @@ Subject identification and verification using EEG signals (Python3.8)
 # Verifica dei soggetti in base allo stimolo
 
 I 66 stimoli a cui sono sottoposti sono così distribuiti nel dataset:
+
 0-24 Stimoli Visivi
+
 24-48 Stimoli Cognitivi
+
 48-52 VEP
+
 52-56 VEPC
+
 56-64 Riposo
+
 64 Occhi chiusi
+
 65 Occhi aperti
 
 Per ottenere quindi i risultati relativi all'AUC e all'EER è necessario:
